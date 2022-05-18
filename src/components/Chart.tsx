@@ -28,6 +28,7 @@ export function useDimensionsContext() {
   return context;
 }
 
+//* Step 3. Draw canvas
 function Chart({ dimensions, children }: ChartProps) {
   return (
     <ChartContext.Provider value={dimensions}>
