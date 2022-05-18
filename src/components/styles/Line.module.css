@@ -1,0 +1,12 @@
+.line {
+  fill: none;
+  stroke: hsl(41deg 35% 52%);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.area {
+  fill: none;
+  stroke: hsl(41deg 35% 52% / 0.185);
+  stroke-width: 0;
+}

@@ -2,18 +2,32 @@
   text-align: center;
 }
 
-.App-logo {
+.Logo-row {
+  display: flex;
+  align-items: center;
+}
+
+.React-logo,
+.D3-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
+.Plus-sign {
+  margin-left: -48px;
+  margin-right: 48px;
+  font-size: 72px;
+  font-weight: 900;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  .React-logo {
+    animation: React-logo-spin infinite 20s linear;
   }
 }
 
 .App-header {
+  margin: -8px;
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -28,7 +42,7 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+@keyframes React-logo-spin {
   from {
     transform: rotate(0deg);
   }
