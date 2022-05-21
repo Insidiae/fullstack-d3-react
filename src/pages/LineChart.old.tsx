@@ -5,16 +5,20 @@ import Chart from "../components/Chart";
 import Line from "../components/Line";
 import Axis from "../components/Axis";
 
-import { useWeatherData } from "../hooks/useWeatherData";
+import { useAsync } from "../hooks/useAsync";
 
-import type { BoundedDimensions } from "../utils/types";
-
-import type { WeatherData } from "../hooks/useWeatherData";
+import type {
+  DataRecord,
+  AccessorFunction,
+  BoundedDimensions,
+  ScaledAccessorFunction,
+} from "../utils/types";
 
 //* Step 1b. Access Data
 const dateParser = d3.timeParse("%Y-%m-%d");
-const xAccessor = (d: WeatherData) => dateParser(d.date) as Date;
-const yAccessor = (d: WeatherData) => d.temperatureMax;
+const xAccessor: AccessorFunction<Date> = (d) =>
+  dateParser(d.date as string) as Date;
+const yAccessor: AccessorFunction<number> = (d) => d.temperatureMax as number;
 
 //* Step 2. Create chart dimensions
 let dimensions: BoundedDimensions = {
@@ -39,7 +43,15 @@ const formatTimelineDate = d3.timeFormat("%B");
 
 function LineChart() {
   //* Step 1a. Fetch Data
-  const { dataset, status, error, run } = useWeatherData();
+  const { data: dataset, status, error, run } = useAsync<Array<DataRecord>>();
+
+  React.useEffect(() => {
+    const datasetPromise = d3.json("/data/my_weather_data.json") as Promise<
+      Array<DataRecord>
+    >;
+
+    run(datasetPromise);
+  }, []);
 
   switch (status) {
     case "idle":
@@ -52,19 +64,20 @@ function LineChart() {
       //* Step 4. Create scales
       const xScale = d3
         .scaleTime()
-        .domain(d3.extent(dataset as WeatherData[], xAccessor) as [Date, Date])
+        .domain(d3.extent(dataset as DataRecord[], xAccessor) as [Date, Date])
         .range([0, dimensions.boundedWidth]);
 
       const yScale = d3
         .scaleLinear()
         .domain(
-          d3.extent(dataset as WeatherData[], yAccessor) as [number, number]
+          d3.extent(dataset as DataRecord[], yAccessor) as [number, number]
         )
         .range([dimensions.boundedHeight, 0]);
 
-      const xAccessorScaled = (d: WeatherData) => xScale(xAccessor(d));
-      const yAccessorScaled = (d: WeatherData) => yScale(yAccessor(d));
-      // const y0AccessorScaled = () => yScale(yScale.domain()[0]);
+      const xAccessorScaled: ScaledAccessorFunction = (d) =>
+        xScale(xAccessor(d));
+      const yAccessorScaled: ScaledAccessorFunction = (d) =>
+        yScale(yAccessor(d));
 
       const freezingTemperaturePlacement = yScale(32);
 
@@ -85,18 +98,10 @@ function LineChart() {
             />
             {/* Step 5. Draw data */}
             <Line
-              data={dataset as WeatherData[]}
+              data={dataset as DataRecord[]}
               xAccessor={xAccessorScaled}
               yAccessor={yAccessorScaled}
             />
-            {/* <Line
-              type="area"
-              data={dataset as WeatherData[]}
-              xAccessor={xAccessorScaled}
-              yAccessor={yAccessorScaled}
-              y0Accessor={y0AccessorScaled}
-              style={{ fill: "hsl(41deg 35% 52% / 0.185)" }}
-            /> */}
             {/* Step 6. Draw peripherals */}
             <Axis
               dimension="x"

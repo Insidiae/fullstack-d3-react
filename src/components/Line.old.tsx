@@ -1,18 +1,20 @@
 import * as React from "react";
 import * as d3 from "d3";
 
+import type { DataRecord, ScaledAccessorFunction } from "../utils/types";
+
 import styles from "./styles/Line.module.css";
 
-interface LineProps<DataType> extends React.SVGAttributes<SVGLineElement> {
+interface LineProps extends React.SVGAttributes<SVGLineElement> {
   type?: "line" | "area";
-  data: DataType[];
-  xAccessor: (d: DataType) => number;
-  yAccessor: (d: DataType) => number;
-  y0Accessor?: (d: DataType) => number;
+  data: DataRecord[];
+  xAccessor: ScaledAccessorFunction;
+  yAccessor: ScaledAccessorFunction;
+  y0Accessor?: ScaledAccessorFunction;
   interpolation?: d3.CurveFactory;
 }
 
-function Line<DataType>({
+function Line({
   type = "line",
   data,
   xAccessor,
@@ -20,15 +22,15 @@ function Line<DataType>({
   y0Accessor = () => 0,
   interpolation = d3.curveMonotoneX,
   ...props
-}: LineProps<DataType>) {
-  const lineGenerator = d3[type]<DataType>();
+}: LineProps) {
+  const lineGenerator = d3[type]<DataRecord>();
 
   lineGenerator.x(xAccessor);
   lineGenerator.y(yAccessor);
   lineGenerator.curve(interpolation);
 
   if (type == "area") {
-    (lineGenerator as d3.Area<DataType>).y0(y0Accessor).y1(yAccessor);
+    (lineGenerator as d3.Area<DataRecord>).y0(y0Accessor).y1(yAccessor);
   }
 
   const line = lineGenerator(data) as string;
