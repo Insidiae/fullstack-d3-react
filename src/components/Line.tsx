@@ -3,7 +3,7 @@ import * as d3 from "d3";
 
 import styles from "./styles/Line.module.css";
 
-interface LineProps<DataType> extends React.SVGAttributes<SVGLineElement> {
+interface LineProps<DataType> extends React.SVGAttributes<SVGPathElement> {
   type?: "line" | "area";
   data: DataType[];
   xAccessor: (d: DataType) => number;
