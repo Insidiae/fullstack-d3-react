@@ -4,18 +4,18 @@
 
 .axisLabel {
   text-anchor: middle;
-  font-size: 0.8em;
-  letter-spacing: 0.01em;
+  font-size: 14px;
+  /* letter-spacing: 0.01em; */
 }
 
 .axisTickHorizontal {
-  font-size: 0.9em;
+  font-size: 10px;
   transition: all 0.3s ease-out;
   text-anchor: middle;
 }
 
 .axisTickVertical {
-  font-size: 0.9em;
+  font-size: 10px;
   transition: all 0.3s ease-out;
   dominant-baseline: middle;
   text-anchor: end;

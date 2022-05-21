@@ -27,6 +27,11 @@ function MainPage() {
               Making Your First Chart
             </Link>
           </li>
+          <li>
+            <Link className={styles.appLink} to="chapters/making-a-scatterplot">
+              Making a Scatterplot
+            </Link>
+          </li>
         </ol>
       </header>
     </div>

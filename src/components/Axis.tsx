@@ -16,12 +16,14 @@ interface BaseAxisProps {
     | d3.ScaleLinear<number, number, never>;
   formatTick?: Function;
   label?: string;
+  numberOfTicks?: number;
 }
 function Axis({
   dimension = "x",
   scale,
   formatTick = formatNumber,
   label = "",
+  numberOfTicks,
   ...props
 }: BaseAxisProps) {
   const dimensions = useDimensionsContext() as BoundedDimensions;
@@ -34,6 +36,7 @@ function Axis({
           formatTick={formatTick}
           dimensions={dimensions}
           label={label}
+          numberOfTicks={numberOfTicks}
           {...props}
         />
       );
@@ -44,6 +47,7 @@ function Axis({
           formatTick={formatTick}
           dimensions={dimensions}
           label={label}
+          numberOfTicks={numberOfTicks}
           {...props}
         />
       );
@@ -62,14 +66,16 @@ function AxisHorizontal({
   label,
   formatTick,
   scale,
+  numberOfTicks,
   ...props
 }: AxisProps) {
   //? Let's aim for one tick per 100 pixels for small screens
   //? and one tick per 250 pixels for wider screens
-  const numberOfTicks =
-    dimensions.boundedWidth < 600
-      ? dimensions.boundedWidth / 100
-      : dimensions.boundedWidth / 250;
+  // const numberOfTicks =
+  //   dimensions.boundedWidth < 600
+  //     ? dimensions.boundedWidth / 100
+  //     : dimensions.boundedWidth / 250;
+  // const ticks = scale.ticks(numberOfTicks);
   const ticks = scale.ticks(numberOfTicks);
 
   return (
@@ -80,18 +86,19 @@ function AxisHorizontal({
     >
       <line className={styles.axisLine} x2={dimensions.boundedWidth} />
       {ticks.map((tick, i) => (
-        <text
-          key={i}
-          className={styles.axisTickHorizontal}
-          transform={`translate(${scale(tick)}, 25)`}
-        >
-          {formatTick(tick)}
-        </text>
+        <g key={i} transform={`translate(${scale(tick)}, 0)`}>
+          <line stroke="black" y2={6} />
+          <text className={styles.axisTickHorizontal} y={9} dy="0.71em">
+            {formatTick(tick)}
+          </text>
+        </g>
       ))}
       {label ? (
         <text
           className={styles.axisLabel}
-          transform={`translate(${dimensions.boundedWidth / 2}, 50)`}
+          transform={`translate(${dimensions.boundedWidth / 2}, ${
+            dimensions.margin.bottom - 10
+          })`}
           textAnchor="middle"
         >
           {label}
@@ -106,27 +113,28 @@ function AxisVertical({
   label,
   formatTick,
   scale,
+  numberOfTicks,
   ...props
 }: AxisProps) {
-  const numberOfTicks = dimensions.boundedHeight / 70;
+  // const numberOfTicks = dimensions.boundedHeight / 70;
+  // const ticks = scale.ticks(numberOfTicks);
   const ticks = scale.ticks(numberOfTicks);
 
   return (
     <g className="Axis AxisVertical" {...props}>
       <line className={styles.axisLine} y2={dimensions.boundedHeight} />
       {ticks.map((tick, i) => (
-        <text
-          key={i}
-          className={styles.axisTickVertical}
-          transform={`translate(-16, ${scale(tick)})`}
-        >
-          {formatTick(tick)}
-        </text>
+        <g key={i} transform={`translate(0, ${scale(tick)})`}>
+          <line stroke="black" x2={-6} />
+          <text className={styles.axisTickVertical} x={-9}>
+            {formatTick(tick)}
+          </text>
+        </g>
       ))}
       {label ? (
         <text
           className={styles.axisLabel}
-          transform={`translate(-56, ${
+          transform={`translate(${-dimensions.margin.left + 10}, ${
             dimensions.boundedHeight / 2
           }) rotate(-90)`}
           textAnchor="middle"

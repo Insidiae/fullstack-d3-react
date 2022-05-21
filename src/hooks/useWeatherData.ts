@@ -2,7 +2,6 @@ import * as React from "react";
 import * as d3 from "d3";
 
 import { useAsync } from "./useAsync";
-import { DataRecord } from "../utils/types";
 
 export interface WeatherData {
   time: number;
