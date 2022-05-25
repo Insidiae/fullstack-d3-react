@@ -22,7 +22,7 @@ const chartSize = d3.min([
   window.innerWidth * 0.9,
   window.innerHeight * 0.9,
 ]) as number;
-let dimensions: BoundedDimensions = {
+const dimensions: BoundedDimensions = {
   width: chartSize,
   height: chartSize,
   margin: {
@@ -44,7 +44,7 @@ const formatTick = d3.format(".1f");
 
 function ScatterPlot() {
   //* Step 1a. Fetch Data
-  const { dataset, status, error, run } = useWeatherData();
+  const { dataset, status, error } = useWeatherData();
 
   switch (status) {
     case "idle":
@@ -53,7 +53,7 @@ function ScatterPlot() {
       return <div>Loading data...</div>;
     case "rejected":
       throw error;
-    case "resolved":
+    case "resolved": {
       //* Step 4. Create scales
       const xScale = d3
         .scaleTime()
@@ -111,6 +111,7 @@ function ScatterPlot() {
           </Chart>
         </div>
       );
+    }
   }
 }
 

@@ -29,8 +29,8 @@ type AsyncState<DataType> =
 type AsyncAction<DataType> =
   | { type: "reset" }
   | { type: "pending"; promise: Promise<DataType> }
-  | { type: "resolved"; data: DataType; promise: Promise<DataType> }
-  | { type: "rejected"; error: Error; promise: Promise<DataType> };
+  | { type: "resolved"; data: DataType; promise?: Promise<DataType> }
+  | { type: "rejected"; error: Error; promise?: Promise<DataType> };
 
 function asyncReducer<DataType>(
   state: AsyncState<DataType>,
@@ -46,7 +46,7 @@ function asyncReducer<DataType>(
       };
     }
     case "resolved": {
-      if (action.promise !== state.promise) return state;
+      if (action.promise && action.promise !== state.promise) return state;
       return {
         status: "resolved",
         data: action.data,
@@ -55,7 +55,7 @@ function asyncReducer<DataType>(
       };
     }
     case "rejected": {
-      if (action.promise !== state.promise) return state;
+      if (action.promise && action.promise !== state.promise) return state;
       return {
         status: "rejected",
         data: null,
@@ -92,7 +92,18 @@ function useAsync<DataType>() {
     );
   }, []);
 
+  const setData = React.useCallback(
+    (data: DataType) => dispatch({ type: "resolved", data }),
+    [dispatch]
+  );
+  const setError = React.useCallback(
+    (error: Error) => dispatch({ type: "rejected", error }),
+    [dispatch]
+  );
+
   return {
+    setData,
+    setError,
     error,
     status,
     data,

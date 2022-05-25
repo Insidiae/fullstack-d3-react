@@ -21,7 +21,7 @@ const xAccessor: AccessorFunction<Date> = (d) =>
 const yAccessor: AccessorFunction<number> = (d) => d.temperatureMax as number;
 
 //* Step 2. Create chart dimensions
-let dimensions: BoundedDimensions = {
+const dimensions: BoundedDimensions = {
   width: window.innerWidth * 0.9,
   height: 400,
   margin: {
@@ -51,7 +51,7 @@ function LineChart() {
     >;
 
     run(datasetPromise);
-  }, []);
+  }, [run]);
 
   switch (status) {
     case "idle":
@@ -60,7 +60,7 @@ function LineChart() {
       return <div>Loading...</div>;
     case "rejected":
       throw error;
-    case "resolved":
+    case "resolved": {
       //* Step 4. Create scales
       const xScale = d3
         .scaleTime()
@@ -112,6 +112,7 @@ function LineChart() {
           </Chart>
         </div>
       );
+    }
   }
 }
 

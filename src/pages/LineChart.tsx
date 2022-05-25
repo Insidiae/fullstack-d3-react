@@ -17,7 +17,7 @@ const xAccessor = (d: WeatherData) => dateParser(d.date) as Date;
 const yAccessor = (d: WeatherData) => d.temperatureMax;
 
 //* Step 2. Create chart dimensions
-let dimensions: BoundedDimensions = {
+const dimensions: BoundedDimensions = {
   width: window.innerWidth * 0.9,
   height: 400,
   margin: {
@@ -39,7 +39,7 @@ const formatTimelineDate = d3.timeFormat("%B");
 
 function LineChart() {
   //* Step 1a. Fetch Data
-  const { dataset, status, error, run } = useWeatherData();
+  const { dataset, status, error } = useWeatherData();
 
   switch (status) {
     case "idle":
@@ -48,7 +48,7 @@ function LineChart() {
       return <div>Loading...</div>;
     case "rejected":
       throw error;
-    case "resolved":
+    case "resolved": {
       //* Step 4. Create scales
       const xScale = d3
         .scaleTime()
@@ -107,6 +107,7 @@ function LineChart() {
           </Chart>
         </div>
       );
+    }
   }
 }
 

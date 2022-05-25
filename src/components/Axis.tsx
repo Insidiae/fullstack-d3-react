@@ -9,12 +9,14 @@ import styles from "./styles/Axis.module.css";
 
 const formatNumber = d3.format(",");
 
+type FormatTickFunction = ((n: number) => string) | ((date: Date) => string);
+
 interface BaseAxisProps {
   dimension: "x" | "y";
   scale:
     | d3.ScaleTime<number, number, never>
     | d3.ScaleLinear<number, number, never>;
-  formatTick?: Function;
+  formatTick?: FormatTickFunction;
   label?: string;
   numberOfTicks?: number;
 }
@@ -58,7 +60,7 @@ function Axis({
 
 interface AxisProps extends Omit<BaseAxisProps, "dimension"> {
   dimensions: BoundedDimensions;
-  formatTick: Function;
+  formatTick: FormatTickFunction;
 }
 
 function AxisHorizontal({
@@ -89,7 +91,7 @@ function AxisHorizontal({
         <g key={i} transform={`translate(${scale(tick)}, 0)`}>
           <line stroke="black" y2={6} />
           <text className={styles.axisTickHorizontal} y={9} dy="0.71em">
-            {formatTick(tick)}
+            {formatTick(tick as number & Date)}
           </text>
         </g>
       ))}
@@ -127,7 +129,7 @@ function AxisVertical({
         <g key={i} transform={`translate(0, ${scale(tick)})`}>
           <line stroke="black" x2={-6} />
           <text className={styles.axisTickVertical} x={-9}>
-            {formatTick(tick)}
+            {formatTick(tick as number & Date)}
           </text>
         </g>
       ))}

@@ -50,14 +50,19 @@ export function useWeatherData() {
   const { data: dataset, status, error, run } = useAsync<Array<WeatherData>>();
 
   React.useEffect(() => {
-    const datasetPromise = d3.json("/data/my_weather_data.json") as Promise<
-      Array<WeatherData>
-    >;
+    const abortController = new AbortController();
+    const datasetPromise = d3.json("/data/my_weather_data.json", {
+      signal: abortController.signal,
+    }) as Promise<Array<WeatherData>>;
 
     run(datasetPromise);
-  }, []);
 
-  return { dataset, status, error, run };
+    return () => {
+      abortController.abort();
+    };
+  }, [run]);
+
+  return { dataset, status, error };
 }
 
 // const sampleData: WeatherData = {
