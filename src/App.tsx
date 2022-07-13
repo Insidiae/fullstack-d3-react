@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import LineChart from "./pages/LineChart";
 import ScatterPlot from "./pages/ScatterPlot";
+import HistogramPage from "./pages/HistogramPage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="chapters">
               <Route path="making-your-first-chart" element={<LineChart />} />
               <Route path="making-a-scatterplot" element={<ScatterPlot />} />
+              <Route path="making-a-bar-chart" element={<HistogramPage />} />
             </Route>
           </Route>
         </Routes>
