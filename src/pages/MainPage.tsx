@@ -18,7 +18,7 @@ function MainPage() {
 
         <h2>Table Of Contents</h2>
 
-        <ol>
+        <ol className={styles.contents}>
           <li>
             <Link
               className={styles.appLink}
@@ -36,6 +36,19 @@ function MainPage() {
             <Link className={styles.appLink} to="chapters/making-a-bar-chart">
               Making a Bar Chart
             </Link>
+          </li>
+          <li>
+            Animations and Transitions
+            <ul>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/animations-and-transitions/histogram"
+                >
+                  Smoothly changing between histogram metrics
+                </Link>
+              </li>
+            </ul>
           </li>
         </ol>
       </header>
