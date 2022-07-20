@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as d3 from "d3";
-import { animated, Transition } from "@react-spring/web";
+import { animated, Transition, Spring } from "@react-spring/web";
 
 import Chart from "../components/Chart";
 import Axis from "../components/Axis";
@@ -105,6 +105,11 @@ function AnimatedHistogram() {
         xScale(d.x0 as number) + barPadding;
       const yAccessorScaled = (bin: WeatherDataBin) => yScale(yAccessor(bin));
 
+      //! React handles updates differently than d3.transition().
+      //! As such, changing metrics causes values to be calculated
+      //! with the latest scale/accessor functions during rendering.
+      //! This causes the bars to get a lot wider/thinner when switching
+      //! between metrics that have different scales.
       const widthAccessorScaled = (d: WeatherDataBin) =>
         xScale(d.x1 as number) - xScale(d.x0 as number) - barPadding;
       const heightAccessorScaled = (d: WeatherDataBin) =>
@@ -131,21 +136,43 @@ function AnimatedHistogram() {
               >
                 <Transition
                   items={bins}
-                  //TODO: figure out how to make the animations work
-                  from={{ yOffset: 1, hue: 221 }}
-                  // enter={{ yOffset: 0, hue: 221 }}
-                  enter={() => async (next) => {
-                    await next({ hue: 116 });
-                    await next({ yOffset: 0, hue: 221 });
-                  }}
-                  leave={() => async (next) => {
-                    await next({ hue: 221 });
-                    await next({ hue: 354 });
-                    await next({ yOffset: 1 });
+                  from={(bin) => ({
+                    barY: dimensions.boundedHeight,
+                    barWidth: Math.max(0, widthAccessorScaled(bin)),
+                    barHeight: 0,
+                    textY: dimensions.boundedHeight + 5,
+                    textOpacity: 0,
+                    fill: "#63fd58",
+                  })}
+                  enter={(bin) => [
+                    {
+                      barY: dimensions.boundedHeight,
+                      barWidth: Math.max(0, widthAccessorScaled(bin)),
+                      barHeight: 0,
+                      textY: dimensions.boundedHeight + 5,
+                      fill: "#63fd58",
+                    },
+                    {
+                      barY: yAccessorScaled(bin),
+                      barHeight: heightAccessorScaled(bin),
+                      textY: yAccessorScaled(bin) - 5,
+                      textOpacity: 1,
+                    },
+                    { fill: "#588dfd" },
+                  ]}
+                  leave={{
+                    fill: "#fd5869",
+                    textOpacity: 0,
+                    barY: dimensions.boundedHeight,
+                    barHeight: 0,
+                    textY: dimensions.boundedHeight + 5,
                   }}
                   exitBeforeEnter={true}
                 >
-                  {({ yOffset, hue }, bin) => {
+                  {(
+                    { barY, barWidth, barHeight, textY, textOpacity, fill },
+                    bin
+                  ) => {
                     return (
                       <g
                         role="listitem"
@@ -156,36 +183,23 @@ function AnimatedHistogram() {
                       >
                         <animated.rect
                           x={xAccessorScaled(bin)}
-                          // y={yOffset.to(
-                          //   (y: number) =>
-                          //     y * dimensions.boundedHeight +
-                          //     yAccessorScaled(bin)
-                          // )}
-                          y={yOffset.to({
-                            output: [
-                              dimensions.boundedHeight,
-                              yAccessorScaled(bin),
-                            ],
-                            range: [1, 0],
-                          })}
-                          width={Math.max(widthAccessorScaled(bin), 10)}
-                          // height={height.to(
-                          //   (h: number) => h * heightAccessorScaled(bin)
-                          // )}
-                          height={heightAccessorScaled(bin)}
-                          fill={`hsl(${hue.get()}deg 98% 67%)`}
+                          // width={Math.max(0, widthAccessorScaled(bin))}
+                          style={{
+                            y: barY,
+                            width: barWidth,
+                            height: barHeight,
+                            fill,
+                          }}
                         />
                         <animated.text
                           x={midpointAccessorScaled(bin)}
-                          y={yOffset.to(
-                            (y: number) =>
-                              y * dimensions.boundedHeight +
-                              yAccessorScaled(bin) -
-                              5
-                          )}
                           textAnchor="middle"
                           fill="hsl(0deg 0% 40%)"
                           fontSize="12px"
+                          style={{
+                            y: textY,
+                            opacity: textOpacity,
+                          }}
                         >
                           {yAccessor(bin)}
                         </animated.text>
@@ -193,55 +207,34 @@ function AnimatedHistogram() {
                     );
                   }}
                 </Transition>
-                {/* {bins.map((bin, i) => (
-                  <g
-                    key={`histogram-bin-${i}`}
-                    role="listitem"
-                    tabIndex={0}
-                    aria-label={`There were ${yAccessor(
-                      bin
-                    )} days with ${metric} between ${bin.x0} and ${bin.x1}`}
-                  >
-                    <rect
-                      x={xAccessorScaled(bin)}
-                      y={yAccessorScaled(bin)}
-                      width={widthAccessorScaled(bin)}
-                      height={heightAccessorScaled(bin)}
-                      fill="hsl(221deg 98% 67%)"
-                    />
-                    <text
-                      x={midpointAccessorScaled(bin)}
-                      y={yAccessorScaled(bin) - 5}
-                      textAnchor="middle"
-                      fill="hsl(0deg 0% 40%)"
-                      fontSize="12px"
-                    >
-                      {yAccessor(bin)}
-                    </text>
-                  </g>
-                ))} */}
               </g>
               {/* Step 6. Draw peripherals */}
-              <line
-                x1={xScale(mean)}
-                x2={xScale(mean)}
-                y1={-15}
-                y2={dimensions.boundedHeight}
-                className={styles.mean}
-                stroke="maroon"
-                strokeDasharray="2px 4px"
-              />
-              <text
-                role="presentation"
-                aria-hidden={true}
-                x={xScale(mean)}
-                y={-20}
-                textAnchor="middle"
-                fill="maroon"
-                fontSize="12px"
-              >
-                mean
-              </text>
+              <Spring to={{ x: xScale(mean) }} delay={700}>
+                {({ x }) => (
+                  <>
+                    <animated.line
+                      x1={x}
+                      x2={x}
+                      y1={-15}
+                      y2={dimensions.boundedHeight}
+                      className={styles.mean}
+                      stroke="maroon"
+                      strokeDasharray="2px 4px"
+                    />
+                    <animated.text
+                      role="presentation"
+                      aria-hidden={true}
+                      x={x}
+                      y={-20}
+                      textAnchor="middle"
+                      fill="maroon"
+                      fontSize="12px"
+                    >
+                      mean
+                    </animated.text>
+                  </>
+                )}
+              </Spring>
               <Axis dimension="x" scale={xScale} label={metric} />
               <clipPath id="bounds-clip-path">
                 <rect

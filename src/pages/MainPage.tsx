@@ -45,7 +45,8 @@ function MainPage() {
                   className={styles.appLink}
                   to="chapters/animations-and-transitions/histogram"
                 >
-                  Smoothly changing between histogram metrics
+                  Using React Spring to smoothly change between histogram
+                  metrics
                 </Link>
               </li>
             </ul>
