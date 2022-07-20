@@ -88,7 +88,11 @@ function AxisHorizontal({
     >
       <line className={styles.axisLine} x2={dimensions.boundedWidth} />
       {ticks.map((tick, i) => (
-        <g key={i} transform={`translate(${scale(tick)}, 0)`}>
+        <g
+          key={i}
+          className={styles.axisTick}
+          transform={`translate(${scale(tick)}, 0)`}
+        >
           <line stroke="black" y2={6} />
           <text className={styles.axisTickHorizontal} y={9} dy="0.71em">
             {formatTick(tick as number & Date)}

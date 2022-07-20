@@ -8,6 +8,10 @@
   /* letter-spacing: 0.01em; */
 }
 
+.axisTick {
+  transition: all 0.3s ease-out;
+}
+
 .axisTickHorizontal {
   font-size: 10px;
   transition: all 0.3s ease-out;
