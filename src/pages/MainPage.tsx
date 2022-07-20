@@ -49,6 +49,14 @@ function MainPage() {
                   metrics
                 </Link>
               </li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/animations-and-transitions/line"
+                >
+                  Animating a line chart when it gets new data
+                </Link>
+              </li>
             </ul>
           </li>
         </ol>
