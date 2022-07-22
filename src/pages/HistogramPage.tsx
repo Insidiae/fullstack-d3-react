@@ -4,8 +4,6 @@ import * as d3 from "d3";
 import Chart from "../components/Chart";
 import Axis from "../components/Axis";
 
-import { useWeatherData } from "../hooks/useWeatherData";
-
 import type { WeatherData } from "../hooks/useWeatherData";
 import type { BoundedDimensions } from "../utils/types";
 
@@ -159,33 +157,17 @@ function SingleHistogram({
   );
 }
 
-function HistogramPage() {
-  //* Step 1a. Fetch Data
-  const { dataset, status, error } = useWeatherData();
-
-  switch (status) {
-    case "idle":
-      return <span>Waiting for data...</span>;
-    case "pending":
-      return <div>Loading data...</div>;
-    case "rejected":
-      throw error;
-    case "resolved":
-      return (
-        <div className={styles.wrapper}>
-          {/* Add a div to copy the structure from the original example */}
-          <div>
-            {metrics.map((metric) => (
-              <SingleHistogram
-                key={metric}
-                dataset={dataset as WeatherData[]}
-                metric={metric}
-              />
-            ))}
-          </div>
-        </div>
-      );
-  }
+function HistogramPage({ dataset }: { dataset: WeatherData[] }) {
+  return (
+    <div className={styles.wrapper}>
+      {/* Add a div to copy the structure from the original example */}
+      <div>
+        {metrics.map((metric) => (
+          <SingleHistogram key={metric} dataset={dataset} metric={metric} />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default HistogramPage;
