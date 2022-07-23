@@ -59,6 +59,19 @@ function MainPage() {
               </li>
             </ul>
           </li>
+          <li>
+            Interactions
+            <ul>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/interactions/histogram"
+                >
+                  Adding interactions to our histogram
+                </Link>
+              </li>
+            </ul>
+          </li>
         </ol>
       </header>
     </div>
