@@ -78,6 +78,14 @@ function MainPage() {
                   Adding interactions to our scatter plot
                 </Link>
               </li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/interactions/line"
+                >
+                  Adding interactions to our line chart
+                </Link>
+              </li>
             </ul>
           </li>
         </ol>
