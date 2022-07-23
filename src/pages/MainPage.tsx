@@ -70,6 +70,14 @@ function MainPage() {
                   Adding interactions to our histogram
                 </Link>
               </li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/interactions/scatterplot"
+                >
+                  Adding interactions to our scatter plot
+                </Link>
+              </li>
             </ul>
           </li>
         </ol>

@@ -8,6 +8,7 @@ import HistogramPage from "./pages/HistogramPage";
 import AnimatedHistogram from "./pages/AnimatedHistogram";
 import AnimatedLineChart from "./pages/AnimatedLineChart";
 import HistogramInteractions from "./pages/HistogramInteractions";
+import ScatterPlotInteractions from "./pages/ScatterPlotInteractions";
 
 import WeatherDataProvider from "./components/WeatherDataProvider";
 
@@ -46,6 +47,12 @@ function App() {
                   path="histogram"
                   element={
                     <WeatherDataProvider Consumer={HistogramInteractions} />
+                  }
+                />
+                <Route
+                  path="scatterplot"
+                  element={
+                    <WeatherDataProvider Consumer={ScatterPlotInteractions} />
                   }
                 />
               </Route>
