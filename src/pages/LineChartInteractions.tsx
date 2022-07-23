@@ -98,7 +98,6 @@ function LineChartInteractions({ dataset }: { dataset: WeatherData[] }) {
   }
 
   function showTooltip(event: React.MouseEvent) {
-    console.log(event);
     const [mouseXPosition] = d3.pointer(event);
     const hoveredDate = xScale.invert(mouseXPosition);
 
