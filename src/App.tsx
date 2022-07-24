@@ -10,6 +10,7 @@ import AnimatedLineChart from "./pages/AnimatedLineChart";
 import HistogramInteractions from "./pages/HistogramInteractions";
 import ScatterPlotInteractions from "./pages/ScatterPlotInteractions";
 import LineChartInteractions from "./pages/LineChartInteractions";
+import DatavizBasics from "./pages/DatavizBasics";
 
 import WeatherDataProvider from "./components/WeatherDataProvider";
 
@@ -63,6 +64,10 @@ function App() {
                   }
                 />
               </Route>
+              <Route
+                path="data-visualization"
+                element={<WeatherDataProvider Consumer={DatavizBasics} />}
+              />
             </Route>
           </Route>
         </Routes>

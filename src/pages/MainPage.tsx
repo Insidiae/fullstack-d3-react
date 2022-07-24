@@ -88,6 +88,12 @@ function MainPage() {
               </li>
             </ul>
           </li>
+          <li>Making a Map (COMING SOON!)</li>
+          <li>
+            <Link className={styles.appLink} to="chapters/data-visualization">
+              Data Visualization Basics
+            </Link>
+          </li>
         </ol>
       </header>
     </div>

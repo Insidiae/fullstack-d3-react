@@ -4,6 +4,7 @@ import type { BoundedDimensions } from "../utils/types";
 
 interface ChartProps {
   dimensions: BoundedDimensions;
+  className?: string;
   children?: React.ReactNode;
 }
 
@@ -29,11 +30,11 @@ export function useDimensionsContext() {
 }
 
 //* Step 3. Draw canvas
-function Chart({ dimensions, children }: ChartProps) {
+function Chart({ dimensions, className, children }: ChartProps) {
   return (
     <ChartContext.Provider value={dimensions}>
       <svg
-        className="Chart"
+        className={`Chart ${className ?? ""}`}
         width={dimensions.width}
         height={dimensions.height}
       >
