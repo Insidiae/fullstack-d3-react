@@ -94,6 +94,26 @@ function MainPage() {
               Data Visualization Basics
             </Link>
           </li>
+          <li>
+            Common Charts
+            <ul>
+              <li>Timeline (COMING SOON!)</li>
+              <li>Heatmap (COMING SOON!)</li>
+              <li>Radar Chart (COMING SOON!)</li>
+              <li>Scatter Plot (COMING SOON!)</li>
+              <li>Pie Charts &amp; Donut Charts (COMING SOON!)</li>
+              <li>Histogram (COMING SOON!)</li>
+              <li>Box Plot (COMING SOON!)</li>
+            </ul>
+          </li>
+          <li>Dashboard Design (COMING SOON!)</li>
+          <li>Marginal Histogram (COMING SOON!)</li>
+          <li>
+            <Link className={styles.appLink} to="chapters/radar-weather-chart">
+              Radar Weather Chart
+            </Link>
+          </li>
+          <li>Animated Sankey Diagram (COMING SOON!)</li>
         </ol>
       </header>
     </div>

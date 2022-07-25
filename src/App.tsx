@@ -13,6 +13,7 @@ import LineChartInteractions from "./pages/LineChartInteractions";
 import DatavizBasics from "./pages/DatavizBasics";
 
 import WeatherDataProvider from "./components/WeatherDataProvider";
+import RadarWeatherChart from "./pages/RadarWeatherChart";
 
 function App() {
   return (
@@ -67,6 +68,10 @@ function App() {
               <Route
                 path="data-visualization"
                 element={<WeatherDataProvider Consumer={DatavizBasics} />}
+              />
+              <Route
+                path="radar-weather-chart"
+                element={<WeatherDataProvider Consumer={RadarWeatherChart} />}
               />
             </Route>
           </Route>

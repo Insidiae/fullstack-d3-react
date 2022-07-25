@@ -3,6 +3,8 @@ import * as d3 from "d3";
 
 import { useAsync } from "./useAsync";
 
+export type precipTypeOption = "rain" | "sleet" | "snow";
+
 export interface WeatherData {
   time: number;
   summary: string;
@@ -13,6 +15,8 @@ export interface WeatherData {
   precipIntensity: number;
   precipIntensityMax: number;
   precipProbability: number;
+  //? precipType only exists if precipProbability is higher than 0
+  precipType?: precipTypeOption;
   temperatureHigh: number;
   temperatureHighTime: number;
   temperatureLow: number;
