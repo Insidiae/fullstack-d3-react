@@ -107,7 +107,11 @@ function MainPage() {
             </ul>
           </li>
           <li>Dashboard Design (COMING SOON!)</li>
-          <li>Marginal Histogram (COMING SOON!)</li>
+          <li>
+            <Link className={styles.appLink} to="chapters/marginal-histogram">
+              Marginal Histogram
+            </Link>
+          </li>
           <li>
             <Link className={styles.appLink} to="chapters/radar-weather-chart">
               Radar Weather Chart

@@ -19,6 +19,9 @@ interface BaseAxisProps {
   formatTick?: FormatTickFunction;
   label?: string;
   numberOfTicks?: number;
+  lineClassName?: string;
+  tickClassName?: string;
+  labelClassName?: string;
 }
 function Axis({
   dimension = "x",
@@ -26,6 +29,9 @@ function Axis({
   formatTick = formatNumber,
   label = "",
   numberOfTicks,
+  lineClassName = "",
+  tickClassName = "",
+  labelClassName = "",
   ...props
 }: BaseAxisProps) {
   const dimensions = useDimensionsContext() as BoundedDimensions;
@@ -39,6 +45,9 @@ function Axis({
           dimensions={dimensions}
           label={label}
           numberOfTicks={numberOfTicks}
+          lineClassName={lineClassName}
+          tickClassName={tickClassName}
+          labelClassName={labelClassName}
           {...props}
         />
       );
@@ -50,6 +59,9 @@ function Axis({
           dimensions={dimensions}
           label={label}
           numberOfTicks={numberOfTicks}
+          lineClassName={lineClassName}
+          tickClassName={tickClassName}
+          labelClassName={labelClassName}
           {...props}
         />
       );
@@ -69,6 +81,9 @@ function AxisHorizontal({
   formatTick,
   scale,
   numberOfTicks,
+  lineClassName,
+  tickClassName,
+  labelClassName,
   ...props
 }: AxisProps) {
   //? Let's aim for one tick per 100 pixels for small screens
@@ -84,13 +99,17 @@ function AxisHorizontal({
     <g
       className="Axis AxisHorizontal"
       {...props}
+      fontSize="10"
       transform={`translate(0, ${dimensions.boundedHeight})`}
     >
-      <line className={styles.axisLine} x2={dimensions.boundedWidth} />
+      <line
+        className={[styles.axisLine, lineClassName].join(" ")}
+        x2={dimensions.boundedWidth}
+      />
       {ticks.map((tick, i) => (
         <g
           key={i}
-          className={styles.axisTick}
+          className={[styles.axisTick, tickClassName].join(" ")}
           transform={`translate(${scale(tick)}, 0)`}
         >
           <line stroke="black" y2={6} />
@@ -101,7 +120,7 @@ function AxisHorizontal({
       ))}
       {label ? (
         <text
-          className={styles.axisLabel}
+          className={[styles.axisLabel, labelClassName].join(" ")}
           transform={`translate(${dimensions.boundedWidth / 2}, ${
             dimensions.margin.bottom - 10
           })`}
@@ -120,6 +139,9 @@ function AxisVertical({
   formatTick,
   scale,
   numberOfTicks,
+  lineClassName,
+  tickClassName,
+  labelClassName,
   ...props
 }: AxisProps) {
   // const numberOfTicks = dimensions.boundedHeight / 70;
@@ -127,10 +149,17 @@ function AxisVertical({
   const ticks = scale.ticks(numberOfTicks);
 
   return (
-    <g className="Axis AxisVertical" {...props}>
-      <line className={styles.axisLine} y2={dimensions.boundedHeight} />
+    <g className="Axis AxisVertical" {...props} fontSize="10">
+      <line
+        className={[styles.axisLine, lineClassName].join(" ")}
+        y2={dimensions.boundedHeight}
+      />
       {ticks.map((tick, i) => (
-        <g key={i} transform={`translate(0, ${scale(tick)})`}>
+        <g
+          key={i}
+          className={tickClassName}
+          transform={`translate(0, ${scale(tick)})`}
+        >
           <line stroke="black" x2={-6} />
           <text className={styles.axisTickVertical} x={-9}>
             {formatTick(tick as number & Date)}
@@ -139,7 +168,7 @@ function AxisVertical({
       ))}
       {label ? (
         <text
-          className={styles.axisLabel}
+          className={[styles.axisLabel, labelClassName].join(" ")}
           transform={`translate(${-dimensions.margin.left + 10}, ${
             dimensions.boundedHeight / 2
           }) rotate(-90)`}
