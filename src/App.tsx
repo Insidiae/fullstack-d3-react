@@ -11,10 +11,11 @@ import HistogramInteractions from "./pages/HistogramInteractions";
 import ScatterPlotInteractions from "./pages/ScatterPlotInteractions";
 import LineChartInteractions from "./pages/LineChartInteractions";
 import DatavizBasics from "./pages/DatavizBasics";
+import DashboardDesign from "./pages/DashboardDesign";
+import MarginalHistogram from "./pages/MarginalHistogram";
+import RadarWeatherChart from "./pages/RadarWeatherChart";
 
 import WeatherDataProvider from "./components/WeatherDataProvider";
-import RadarWeatherChart from "./pages/RadarWeatherChart";
-import MarginalHistogram from "./pages/MarginalHistogram";
 
 function App() {
   return (
@@ -69,6 +70,10 @@ function App() {
               <Route
                 path="data-visualization"
                 element={<WeatherDataProvider Consumer={DatavizBasics} />}
+              />
+              <Route
+                path="dashboard-design"
+                element={<WeatherDataProvider Consumer={DashboardDesign} />}
               />
               <Route
                 path="marginal-histogram"

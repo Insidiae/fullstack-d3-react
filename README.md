@@ -26,7 +26,7 @@ Course exercises from the Fullstack D3 book, now remade with React + D3 + TypeSc
    - Pie Charts & Donut Charts (COMING SOON!)
    - Histogram (COMING SOON!)
    - Box Plot (COMING SOON!)
-9. Dashboard Design (COMING SOON!)
+9. [Dashboard Design: Designing Tables](src/pages/DashboardDesign.tsx)
 10. [Marginal Histogram](src/pages/MarginalHistogram.tsx)
 11. [Radar Weather Chart](src/pages/RadarWeatherChart.tsx)
 12. Animated Sankey Diagram (COMING SOON!)

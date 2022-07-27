@@ -106,7 +106,11 @@ function MainPage() {
               <li>Box Plot (COMING SOON!)</li>
             </ul>
           </li>
-          <li>Dashboard Design (COMING SOON!)</li>
+          <li>
+            <Link className={styles.appLink} to="chapters/dashboard-design">
+              Dashboard Design
+            </Link>
+          </li>
           <li>
             <Link className={styles.appLink} to="chapters/marginal-histogram">
               Marginal Histogram
