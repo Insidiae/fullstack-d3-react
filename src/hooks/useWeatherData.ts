@@ -49,6 +49,12 @@ export interface WeatherData {
 
 export type ScaledWeatherAccessorFunction = (d: WeatherData) => number;
 
+//? Get the metrics from WeatherData which return a number
+//? https://stackoverflow.com/questions/56863875/typescript-how-do-you-filter-a-types-properties-to-those-of-a-certain-type
+export type NumericWeatherDataMetric = {
+  [K in keyof WeatherData]-?: WeatherData[K] extends d3.Numeric ? K : never;
+}[keyof WeatherData];
+
 export function useWeatherData() {
   //* Step 1a. Fetch Data
   const { data: dataset, status, error, run } = useAsync<Array<WeatherData>>();

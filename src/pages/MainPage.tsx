@@ -97,13 +97,48 @@ function MainPage() {
           <li>
             Common Charts
             <ul>
-              <li>Timeline (COMING SOON!)</li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/common-charts/timeline"
+                >
+                  Timeline
+                </Link>
+              </li>
               <li>Heatmap (COMING SOON!)</li>
               <li>Radar Chart (COMING SOON!)</li>
-              <li>Scatter Plot (COMING SOON!)</li>
-              <li>Pie Charts &amp; Donut Charts (COMING SOON!)</li>
-              <li>Histogram (COMING SOON!)</li>
-              <li>Box Plot (COMING SOON!)</li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/common-charts/scatterplot"
+                >
+                  Scatter Plot
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/common-charts/pie"
+                >
+                  Pie Charts &amp; Donut Charts
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/common-charts/histogram"
+                >
+                  Histogram
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/common-charts/box-plot"
+                >
+                  Box Plot
+                </Link>
+              </li>
             </ul>
           </li>
           <li>

@@ -2,16 +2,28 @@ import * as React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import MainPage from "./pages/MainPage";
+
 import LineChart from "./pages/LineChart";
 import ScatterPlot from "./pages/ScatterPlot";
 import HistogramPage from "./pages/HistogramPage";
+
 import AnimatedHistogram from "./pages/AnimatedHistogram";
 import AnimatedLineChart from "./pages/AnimatedLineChart";
+
 import HistogramInteractions from "./pages/HistogramInteractions";
 import ScatterPlotInteractions from "./pages/ScatterPlotInteractions";
 import LineChartInteractions from "./pages/LineChartInteractions";
+
 import DatavizBasics from "./pages/DatavizBasics";
+
+import CommonTimeline from "./pages/common-charts/CommonTimeline";
+import CommonScatterplot from "./pages/common-charts/CommonScatterplot";
+import CommonPieChart from "./pages/common-charts/CommonPieChart";
+import CommonHistogram from "./pages/common-charts/CommonHistogram";
+import CommonBoxPlot from "./pages/common-charts/CommonBoxPlot";
+
 import DashboardDesign from "./pages/DashboardDesign";
+
 import MarginalHistogram from "./pages/MarginalHistogram";
 import RadarWeatherChart from "./pages/RadarWeatherChart";
 
@@ -71,6 +83,28 @@ function App() {
                 path="data-visualization"
                 element={<WeatherDataProvider Consumer={DatavizBasics} />}
               />
+              <Route path="common-charts">
+                <Route
+                  path="timeline"
+                  element={<WeatherDataProvider Consumer={CommonTimeline} />}
+                />
+                <Route
+                  path="scatterplot"
+                  element={<WeatherDataProvider Consumer={CommonScatterplot} />}
+                />
+                <Route
+                  path="pie"
+                  element={<WeatherDataProvider Consumer={CommonPieChart} />}
+                />
+                <Route
+                  path="histogram"
+                  element={<WeatherDataProvider Consumer={CommonHistogram} />}
+                />
+                <Route
+                  path="box-plot"
+                  element={<WeatherDataProvider Consumer={CommonBoxPlot} />}
+                />
+              </Route>
               <Route
                 path="dashboard-design"
                 element={<WeatherDataProvider Consumer={DashboardDesign} />}
