@@ -88,7 +88,11 @@ function MainPage() {
               </li>
             </ul>
           </li>
-          <li>Making a Map (COMING SOON!)</li>
+          <li>
+            <Link className={styles.appLink} to="chapters/making-a-map">
+              Making a Map
+            </Link>
+          </li>
           <li>
             <Link className={styles.appLink} to="chapters/data-visualization">
               Data Visualization Basics
@@ -170,7 +174,7 @@ function MainPage() {
               Radar Weather Chart
             </Link>
           </li>
-          <li>Animated Sankey Diagram (COMING SOON!)</li>
+          <li>Animated Sankey Diagram (COMING SOON&trade;)</li>
         </ol>
       </header>
     </div>

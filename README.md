@@ -16,7 +16,7 @@ Course exercises from the Fullstack D3 book, now remade with React + D3 + TypeSc
    - [Adding interactions to our histogram](src/pages/HistogramInteractions.tsx)
    - [Adding interactions to our scatter plot](src/pages/ScatterPlotInteractions.tsx)
    - [Adding interactions to our line chart](src/pages/LineChartInteractions.tsx)
-6. Making a Map (COMING SOON!)
+6. [Making a Map](src/pages/MapPage.tsx)
 7. [Data Visualization Basics](src/pages/DatavizBasics.tsx)
 8. **Common Charts**
    - [Timeline](src/pages/common-charts/CommonTimeline.tsx)
@@ -29,4 +29,4 @@ Course exercises from the Fullstack D3 book, now remade with React + D3 + TypeSc
 9. [Dashboard Design: Designing Tables](src/pages/DashboardDesign.tsx)
 10. [Marginal Histogram](src/pages/MarginalHistogram.tsx)
 11. [Radar Weather Chart](src/pages/RadarWeatherChart.tsx)
-12. Animated Sankey Diagram (COMING SOON!)
+12. Animated Sankey Diagram (COMING SOON™)

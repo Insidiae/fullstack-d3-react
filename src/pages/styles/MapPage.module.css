@@ -1,0 +1,103 @@
+/* Import and use the Inter font https://rsms.me/inter/ */
+@import url("https://rsms.me/inter/inter.css");
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5em 2em;
+  letter-spacing: -0.011em;
+  font-family: "Inter var", sans-serif;
+  font-size: 16px;
+}
+
+.wrapper {
+  position: relative;
+}
+
+.earth {
+  fill: #e2f1f1;
+  stroke: none;
+}
+
+.graticule {
+  stroke: #cadddd;
+  fill: none;
+}
+
+.myLocation {
+  fill: #8f97db;
+  stroke: white;
+}
+
+.country:hover {
+  fill: cornflowerblue;
+}
+
+.circle {
+  pointer-events: none;
+}
+
+.legendTitle {
+  fill: #576574;
+  text-anchor: middle;
+  font-weight: 900;
+  font-size: 0.95em;
+  letter-spacing: 0.01em;
+}
+
+.legendByline {
+  fill: #576574;
+  opacity: 0.6;
+  text-anchor: middle;
+  font-size: 0.7em;
+}
+
+.legendValue {
+  fill: #576574;
+  dominant-baseline: middle;
+  font-size: 0.8em;
+}
+
+.voronoi {
+  fill: transparent;
+}
+
+.tooltip {
+  opacity: 0;
+  position: absolute;
+  top: -12px;
+  left: 0;
+  padding: 0.6em 1em;
+  background: #fff;
+  text-align: center;
+  border: 1px solid #ddd;
+  z-index: 10;
+  transition: all 0.2s ease-out;
+  pointer-events: none;
+}
+
+.tooltip:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  transform: translate(-50%, 50%) rotate(45deg);
+  transform-origin: center center;
+  z-index: 10;
+}
+
+.tooltipCountry {
+  margin-bottom: 0.2em;
+  font-weight: 600;
+}
+
+.tooltipValue {
+  font-size: 0.8em;
+}

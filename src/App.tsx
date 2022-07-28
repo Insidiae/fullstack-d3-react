@@ -16,6 +16,8 @@ import LineChartInteractions from "./pages/LineChartInteractions";
 
 import DatavizBasics from "./pages/DatavizBasics";
 
+import MapPage from "./pages/MapPage";
+
 import CommonTimeline from "./pages/common-charts/CommonTimeline";
 import CommonHeatmap from "./pages/common-charts/CommonHeatmap";
 import CommonRadarChart from "./pages/common-charts/CommonRadarChart";
@@ -81,6 +83,7 @@ function App() {
                   }
                 />
               </Route>
+              <Route path="making-a-map" element={<MapPage />} />
               <Route
                 path="data-visualization"
                 element={<WeatherDataProvider Consumer={DatavizBasics} />}
