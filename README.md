@@ -21,7 +21,7 @@ Course exercises from the Fullstack D3 book, now remade with React + D3 + TypeSc
 8. **Common Charts**
    - [Timeline](src/pages/common-charts/CommonTimeline.tsx)
    - Heatmap (COMING SOON!)
-   - Radar Chart (COMING SOON!)
+   - [Radar Chart](src/pages//common-charts/CommonRadarChart.tsx)
    - [Scatter Plot](src/pages/common-charts/CommonScatterplot.tsx)
    - [Pie Charts & Donut Charts](src/pages/common-charts/CommonPieChart.tsx)
    - [Histogram](src/pages/common-charts/CommonHistogram.tsx)

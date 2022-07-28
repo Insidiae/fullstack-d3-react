@@ -106,7 +106,14 @@ function MainPage() {
                 </Link>
               </li>
               <li>Heatmap (COMING SOON!)</li>
-              <li>Radar Chart (COMING SOON!)</li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/common-charts/radar"
+                >
+                  Radar Chart
+                </Link>
+              </li>
               <li>
                 <Link
                   className={styles.appLink}

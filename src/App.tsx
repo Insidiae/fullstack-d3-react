@@ -17,6 +17,7 @@ import LineChartInteractions from "./pages/LineChartInteractions";
 import DatavizBasics from "./pages/DatavizBasics";
 
 import CommonTimeline from "./pages/common-charts/CommonTimeline";
+import CommonRadarChart from "./pages/common-charts/CommonRadarChart";
 import CommonScatterplot from "./pages/common-charts/CommonScatterplot";
 import CommonPieChart from "./pages/common-charts/CommonPieChart";
 import CommonHistogram from "./pages/common-charts/CommonHistogram";
@@ -87,6 +88,10 @@ function App() {
                 <Route
                   path="timeline"
                   element={<WeatherDataProvider Consumer={CommonTimeline} />}
+                />
+                <Route
+                  path="radar"
+                  element={<WeatherDataProvider Consumer={CommonRadarChart} />}
                 />
                 <Route
                   path="scatterplot"
