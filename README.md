@@ -20,7 +20,7 @@ Course exercises from the Fullstack D3 book, now remade with React + D3 + TypeSc
 7. [Data Visualization Basics](src/pages/DatavizBasics.tsx)
 8. **Common Charts**
    - [Timeline](src/pages/common-charts/CommonTimeline.tsx)
-   - Heatmap (COMING SOON!)
+   - [Heatmap](src/pages/common-charts/CommonHeatmap.tsx)
    - [Radar Chart](src/pages//common-charts/CommonRadarChart.tsx)
    - [Scatter Plot](src/pages/common-charts/CommonScatterplot.tsx)
    - [Pie Charts & Donut Charts](src/pages/common-charts/CommonPieChart.tsx)

@@ -105,7 +105,14 @@ function MainPage() {
                   Timeline
                 </Link>
               </li>
-              <li>Heatmap (COMING SOON!)</li>
+              <li>
+                <Link
+                  className={styles.appLink}
+                  to="chapters/common-charts/heatmap"
+                >
+                  Heatmap
+                </Link>
+              </li>
               <li>
                 <Link
                   className={styles.appLink}
