@@ -2,7 +2,7 @@
 
 Course exercises from the Fullstack D3 book, now remade with React + D3 + TypeScript
 
-[View the live demo here!](https://bespoke-zuccutto-1b184d.netlify.app/)
+[View the live demo here!](https://fullstack-d3-react-1b184d.netlify.app/)
 
 ## Table of Contents
 
