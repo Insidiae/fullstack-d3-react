@@ -1,5 +1,7 @@
-import * as React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+
+import { weatherDataLoader, worldDataLoader } from "./loaders";
 
 import MainPage from "./pages/MainPage";
 
@@ -14,9 +16,9 @@ import HistogramInteractions from "./pages/HistogramInteractions";
 import ScatterPlotInteractions from "./pages/ScatterPlotInteractions";
 import LineChartInteractions from "./pages/LineChartInteractions";
 
-import DatavizBasics from "./pages/DatavizBasics";
-
 import MapPage from "./pages/MapPage";
+
+import DatavizBasics from "./pages/DatavizBasics";
 
 import CommonTimeline from "./pages/common-charts/CommonTimeline";
 import CommonHeatmap from "./pages/common-charts/CommonHeatmap";
@@ -31,111 +33,136 @@ import DashboardDesign from "./pages/DashboardDesign";
 import MarginalHistogram from "./pages/MarginalHistogram";
 import RadarWeatherChart from "./pages/RadarWeatherChart";
 
-import WeatherDataProvider from "./components/WeatherDataProvider";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    index: true,
+    element: <MainPage />,
+  },
+  {
+    path: "/chapters",
+    children: [
+      {
+        path: "making-your-first-chart",
+        loader: weatherDataLoader,
+        element: <LineChart />,
+      },
+      {
+        path: "making-a-scatterplot",
+        loader: weatherDataLoader,
+        element: <ScatterPlot />,
+      },
+      {
+        path: "making-a-bar-chart",
+        loader: weatherDataLoader,
+        element: <HistogramPage />,
+      },
+      {
+        path: "animations-and-transitions",
+        children: [
+          {
+            path: "histogram",
+            loader: weatherDataLoader,
+            element: <AnimatedHistogram />,
+          },
+          {
+            path: "line",
+            loader: weatherDataLoader,
+            element: <AnimatedLineChart />,
+          },
+        ],
+      },
+      {
+        path: "interactions",
+        children: [
+          {
+            path: "histogram",
+            loader: weatherDataLoader,
+            element: <HistogramInteractions />,
+          },
+          {
+            path: "scatterplot",
+            loader: weatherDataLoader,
+            element: <ScatterPlotInteractions />,
+          },
+          {
+            path: "line",
+            loader: weatherDataLoader,
+            element: <LineChartInteractions />,
+          },
+        ],
+      },
+      {
+        path: "making-a-map",
+        loader: worldDataLoader,
+        element: <MapPage />,
+      },
+      {
+        path: "data-visualization",
+        loader: weatherDataLoader,
+        element: <DatavizBasics />,
+      },
+      {
+        path: "common-charts",
+        children: [
+          {
+            path: "timeline",
+            loader: weatherDataLoader,
+            element: <CommonTimeline />,
+          },
+          {
+            path: "heatmap",
+            loader: weatherDataLoader,
+            element: <CommonHeatmap />,
+          },
+          {
+            path: "radar",
+            loader: weatherDataLoader,
+            element: <CommonRadarChart />,
+          },
+          {
+            path: "scatterplot",
+            loader: weatherDataLoader,
+            element: <CommonScatterplot />,
+          },
+          {
+            path: "pie",
+            loader: weatherDataLoader,
+            element: <CommonPieChart />,
+          },
+          {
+            path: "histogram",
+            loader: weatherDataLoader,
+            element: <CommonHistogram />,
+          },
+          {
+            path: "box-plot",
+            loader: weatherDataLoader,
+            element: <CommonBoxPlot />,
+          },
+        ],
+      },
+      {
+        path: "dashboard-design",
+        loader: weatherDataLoader,
+        element: <DashboardDesign />,
+      },
+      {
+        path: "marginal-histogram",
+        loader: weatherDataLoader,
+        element: <MarginalHistogram />,
+      },
+      {
+        path: "radar-weather-chart",
+        loader: weatherDataLoader,
+        element: <RadarWeatherChart />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/">
-            <Route index element={<MainPage />} />
-            <Route path="chapters">
-              <Route
-                path="making-your-first-chart"
-                element={<WeatherDataProvider Consumer={LineChart} />}
-              />
-              <Route
-                path="making-a-scatterplot"
-                element={<WeatherDataProvider Consumer={ScatterPlot} />}
-              />
-              <Route
-                path="making-a-bar-chart"
-                element={<WeatherDataProvider Consumer={HistogramPage} />}
-              />
-              <Route path="animations-and-transitions">
-                <Route
-                  path="histogram"
-                  element={<WeatherDataProvider Consumer={AnimatedHistogram} />}
-                />
-                <Route
-                  path="line"
-                  element={<WeatherDataProvider Consumer={AnimatedLineChart} />}
-                />
-              </Route>
-              <Route path="interactions">
-                <Route
-                  path="histogram"
-                  element={
-                    <WeatherDataProvider Consumer={HistogramInteractions} />
-                  }
-                />
-                <Route
-                  path="scatterplot"
-                  element={
-                    <WeatherDataProvider Consumer={ScatterPlotInteractions} />
-                  }
-                />
-                <Route
-                  path="line"
-                  element={
-                    <WeatherDataProvider Consumer={LineChartInteractions} />
-                  }
-                />
-              </Route>
-              <Route path="making-a-map" element={<MapPage />} />
-              <Route
-                path="data-visualization"
-                element={<WeatherDataProvider Consumer={DatavizBasics} />}
-              />
-              <Route path="common-charts">
-                <Route
-                  path="timeline"
-                  element={<WeatherDataProvider Consumer={CommonTimeline} />}
-                />
-                <Route
-                  path="heatmap"
-                  element={<WeatherDataProvider Consumer={CommonHeatmap} />}
-                />
-                <Route
-                  path="radar"
-                  element={<WeatherDataProvider Consumer={CommonRadarChart} />}
-                />
-                <Route
-                  path="scatterplot"
-                  element={<WeatherDataProvider Consumer={CommonScatterplot} />}
-                />
-                <Route
-                  path="pie"
-                  element={<WeatherDataProvider Consumer={CommonPieChart} />}
-                />
-                <Route
-                  path="histogram"
-                  element={<WeatherDataProvider Consumer={CommonHistogram} />}
-                />
-                <Route
-                  path="box-plot"
-                  element={<WeatherDataProvider Consumer={CommonBoxPlot} />}
-                />
-              </Route>
-              <Route
-                path="dashboard-design"
-                element={<WeatherDataProvider Consumer={DashboardDesign} />}
-              />
-              <Route
-                path="marginal-histogram"
-                element={<WeatherDataProvider Consumer={MarginalHistogram} />}
-              />
-              <Route
-                path="radar-weather-chart"
-                element={<WeatherDataProvider Consumer={RadarWeatherChart} />}
-              />
-            </Route>
-          </Route>
-        </Routes>
-      </Router>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

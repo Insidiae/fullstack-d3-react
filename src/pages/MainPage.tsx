@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import ReactLogo from "../logo-react.svg";
 import D3Logo from "../logo-d3.svg";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as d3 from "d3";
-import { animated, AnimatedProps } from "@react-spring/web";
+import { animated, type AnimatedProps } from "@react-spring/web";
 
 import styles from "./styles/Line.module.css";
 

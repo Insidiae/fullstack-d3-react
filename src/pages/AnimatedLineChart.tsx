@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 import { Spring } from "@react-spring/web";
 
@@ -8,9 +9,9 @@ import Axis from "../components/Axis";
 
 import { useInterval } from "../hooks/useInterval";
 
+import type { weatherDataLoader, WeatherData } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
 
-import type { WeatherData } from "../hooks/useWeatherData";
 
 //* Step 1b. Access Data
 const dateParser = d3.timeParse("%Y-%m-%d");
@@ -38,7 +39,8 @@ dimensions.boundedHeight =
 
 const formatTimelineDate = d3.timeFormat("%b %d");
 
-function AnimatedLineChart({ dataset }: { dataset: WeatherData[] }) {
+function AnimatedLineChart() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
   const [sliceExtent, setSliceExtent] = React.useState({ from: 0, to: 100 });
 
   const datasetSlice = dataset.slice(sliceExtent.from, sliceExtent.to);

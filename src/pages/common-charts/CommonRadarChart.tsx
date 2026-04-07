@@ -1,14 +1,16 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../../components/Chart";
 
-import type { BoundedDimensions } from "../../utils/types";
-
 import type {
+  weatherDataLoader,
   WeatherData,
   NumericWeatherDataMetric,
-} from "../../hooks/useWeatherData";
+} from "../../loaders";
+import type { BoundedDimensions } from "../../utils/types";
+
 
 import styles from "./styles/CommonRadarChart.module.css";
 
@@ -126,7 +128,9 @@ function RadarChart({
   );
 }
 
-function CommonRadarChart({ dataset }: { dataset: WeatherData[] }) {
+function CommonRadarChart() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
+
   //* Step 1b. Access data
   const dateParser = d3.timeParse("%Y-%m-%d");
   const dateAccessor = (d: WeatherData) => dateParser(d.date) as Date;

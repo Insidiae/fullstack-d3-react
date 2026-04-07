@@ -1,11 +1,12 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../components/Chart";
 
+import type { weatherDataLoader, WeatherData } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
 
-import type { WeatherData } from "../hooks/useWeatherData";
 
 import styles from "./styles/DatavizBasics.module.css";
 
@@ -58,7 +59,8 @@ dimensions.boundedWidth =
 dimensions.boundedHeight =
   dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
 
-function DatavizBasics({ dataset }: { dataset: WeatherData[] }) {
+function DatavizBasics() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
   const downsampledData = downsampleData(dataset, xAccessor, yAccessor);
 
   //* Step 4. Create scales

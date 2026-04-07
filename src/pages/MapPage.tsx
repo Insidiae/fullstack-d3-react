@@ -1,65 +1,16 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../components/Chart";
 
-import { useAsync } from "../hooks/useAsync";
 
 import type { Feature, FeatureCollection } from "geojson";
 
+import type { worldDataLoader, CountryData } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
 
 import styles from "./styles/MapPage.module.css";
-
-type CSVColumns =
-  | "Country Name"
-  | "Country Code"
-  | "Series Name"
-  | "Series Code"
-  | "2017 [YR2017]";
-
-type CountryData = {
-  [key: string]: number;
-};
-
-export function useWorldData() {
-  //* Step 1a. Fetch Data
-  const { data, status, error, run } =
-    useAsync<[FeatureCollection, d3.DSVRowArray<CSVColumns>]>();
-
-  React.useEffect(() => {
-    const abortController = new AbortController();
-    const countryShapesRequest = d3.json(
-      "/data/world-geojson.json"
-    ) as Promise<FeatureCollection>;
-    const datasetPromise = d3.csv("/data/data_bank_data.csv", {
-      signal: abortController.signal,
-    }) as Promise<d3.DSVRowArray<CSVColumns>>;
-
-    run(Promise.all([countryShapesRequest, datasetPromise]));
-
-    return () => {
-      abortController.abort();
-    };
-  }, [run]);
-
-  if (!data) {
-    return { countryShapes: null, metricDataByCountry: null, status, error };
-  }
-
-  const metric = "Population growth (annual %)";
-  const metricDataByCountry: CountryData = {};
-  const [countryShapes, dataset] = data;
-
-  dataset.forEach((d) => {
-    if (d["Series Name"] === metric) {
-      metricDataByCountry[d["Country Code"] as string] =
-        +(d["2017 [YR2017]"] as string) || 0;
-    }
-  });
-
-  return { countryShapes, metricDataByCountry, status, error };
-}
 
 type TooltipState = {
   show: boolean;
@@ -366,21 +317,8 @@ const MemoizedMapPath = React.memo(MapPath, (prevProps, nextProps) => {
 MemoizedMapPath.displayName = "MemoizedMapPath";
 
 function MapPage() {
-  const { countryShapes, metricDataByCountry, status, error } = useWorldData();
+  const { countryShapes, metricDataByCountry } = useLoaderData<typeof worldDataLoader>();
 
-  if (status === "idle") {
-    return <span>Waiting for data...</span>;
-  }
-
-  if (status === "pending") {
-    return <div>Loading data...</div>;
-  }
-
-  if (status === "rejected") {
-    throw error;
-  }
-
-  if (countryShapes && metricDataByCountry) {
     return (
       <div className={styles.container}>
         <Map
@@ -389,9 +327,6 @@ function MapPage() {
         />
       </div>
     );
-  }
-
-  throw new Error("invalid case!");
 }
 
 export default MapPage;

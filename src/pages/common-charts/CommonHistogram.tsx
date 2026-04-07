@@ -1,13 +1,15 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../../components/Chart";
 import Axis from "../../components/Axis";
 
 import type {
+  weatherDataLoader,
   WeatherData,
   NumericWeatherDataMetric,
-} from "../../hooks/useWeatherData";
+} from "../../loaders";
 import type { BoundedDimensions } from "../../utils/types";
 
 import styles from "./styles/CommonStyles.module.css";
@@ -145,7 +147,9 @@ function Histogram({
   );
 }
 
-function CommonHistogram({ dataset }: { dataset: WeatherData[] }) {
+function CommonHistogram() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
+  
   return (
     <div className={styles.wrapper}>
       <Histogram dataset={dataset} metric="humidity" label="Humidity" />

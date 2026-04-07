@@ -1,9 +1,10 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
+import type { weatherDataLoader, WeatherData, precipTypeOption } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
 
-import type { WeatherData, precipTypeOption } from "../hooks/useWeatherData";
 
 import styles from "./styles/RadarWeatherChart.module.css";
 
@@ -122,7 +123,9 @@ const tooltipArcGenerator = d3
   .startAngle((angle) => angle - 0.015)
   .endAngle((angle) => angle + 0.015);
 
-function RadarWeatherChart({ dataset }: { dataset: WeatherData[] }) {
+function RadarWeatherChart() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
+  
   //* Step 4. Create scales
   const angleScale = d3
     .scaleTime()
