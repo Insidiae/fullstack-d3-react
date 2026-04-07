@@ -2,6 +2,7 @@
 import * as React from "react";
 
 export function useInterval(callback: () => void, delay: number) {
+  // @ts-expect-error - callback is a function
   const savedCallback = React.useRef<typeof callback>();
 
   // Remember the latest callback.

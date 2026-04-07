@@ -123,7 +123,7 @@ function AnimatedHistogram() {
           >
             <Transition
               items={bins}
-              from={(bin) => ({
+              from={(bin: d3.Bin<WeatherData, number>) => ({
                 barY: dimensions.boundedHeight,
                 barWidth: Math.max(0, widthAccessorScaled(bin)),
                 barHeight: 0,
@@ -131,7 +131,7 @@ function AnimatedHistogram() {
                 textOpacity: 0,
                 fill: "#63fd58",
               })}
-              enter={(bin) => [
+              enter={(bin: d3.Bin<WeatherData, number>) => [
                 {
                   barY: dimensions.boundedHeight,
                   barWidth: Math.max(0, widthAccessorScaled(bin)),
