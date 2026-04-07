@@ -18,6 +18,12 @@ interface Person {
   yJitter: number;
 }
 
+interface VisiblePerson extends Person {
+  x: number;
+  y: number;
+  opacity: number;
+}
+
 interface EndingData {
   endingId: number;
   sesId: number;
@@ -118,6 +124,10 @@ const linkOptions: [number, number][][] = d3.merge(
   )
 );
 
+//* Precomputed symbol paths
+const circleSymbolPath = d3.symbol().type(d3.symbolCircle)() ?? "";
+const triangleSymbolPath = d3.symbol().type(d3.symbolTriangle)() ?? "";
+
 //* Utility functions
 const getRandomNumberInRange = (min: number, max: number) =>
   Math.random() * (max - min) + min;
@@ -129,9 +139,8 @@ const sentenceCase = (str: string) =>
 function AnimatedSankey() {
   const dataset = useLoaderData<typeof educationDataLoader>();
 
-  const markersGroupRef = React.useRef<SVGGElement>(null);
-  const endingBarGroupRef = React.useRef<SVGGElement>(null);
-  const endingValuesGroupRef = React.useRef<SVGGElement>(null);
+  const [visiblePeople, setVisiblePeople] = React.useState<VisiblePerson[]>([]);
+  const [endingPercentages, setEndingPercentages] = React.useState<EndingData[]>([]);
 
   const stackedProbabilities = React.useMemo(() => {
     const result: Record<string, number[]> = {};
@@ -148,9 +157,11 @@ function AnimatedSankey() {
 
   //* Step 7. Set up interactions - animation loop
   React.useEffect(() => {
-    let currentPersonId = 0;
     const maximumPeople = 10000;
     const people: Person[] = [];
+    let currentPersonId = 0;
+    let animStartTime: number | null = null;
+    let animFrameId: number;
 
     function generatePerson(elapsed: number): Person {
       currentPersonId++;
@@ -172,58 +183,28 @@ function AnimatedSankey() {
       };
     }
 
-    const timer = d3.timer((elapsed) => {
+    function tick(timestamp: number) {
+      if (animStartTime === null) animStartTime = timestamp;
+      const elapsed = timestamp - animStartTime;
+
       const xProgressAccessor = (d: Person) => (elapsed - d.startTime) / 5000;
 
       if (people.length < maximumPeople) {
         people.push(...d3.range(2).map(() => generatePerson(elapsed)));
       }
 
-      const markersGroup = d3.select(markersGroupRef.current);
-
-      const females = markersGroup
-        .selectAll<SVGPathElement, Person>(".marker-circle")
-        .data(
-          people.filter((d) => xProgressAccessor(d) < 1 && sexAccessor(d) === 0),
-          (d) => d.id
-        );
-      females
-        .enter()
-        .append("path")
-        .attr("class", "marker marker-circle")
-        .attr("d", d3.symbol().type(d3.symbolCircle))
-        .style("opacity", 0);
-      females.exit().remove();
-
-      const males = markersGroup
-        .selectAll<SVGPathElement, Person>(".marker-triangle")
-        .data(
-          people.filter((d) => xProgressAccessor(d) < 1 && sexAccessor(d) === 1),
-          (d) => d.id
-        );
-      males
-        .enter()
-        .append("path")
-        .attr("class", "marker marker-triangle")
-        .attr("d", d3.symbol().type(d3.symbolTriangle))
-        .style("opacity", 0);
-      males.exit().remove();
-
-      markersGroup
-        .selectAll<SVGPathElement, Person>(".marker")
-        .style("transform", (d) => {
-          const x = xScale(xProgressAccessor(d));
+      const visible: VisiblePerson[] = people
+        .filter((d) => xProgressAccessor(d) < 1)
+        .map((d) => {
+          const xProgress = xProgressAccessor(d);
+          const x = xScale(xProgress);
           const yStart = startYScale(sesAccessor(d));
           const yEnd = endYScale(educationAccessor(d));
           const yChange = yEnd - yStart;
-          const yProgress = yTransitionProgressScale(xProgressAccessor(d));
+          const yProgress = yTransitionProgressScale(xProgress);
           const y = yStart + d.yJitter + yChange * yProgress;
-          return `translate(${x}px, ${y}px)`;
-        })
-        .attr("fill", (d) => colorScale(sesAccessor(d)))
-        .transition()
-        .duration(100)
-        .style("opacity", (d) => (xScale(xProgressAccessor(d)) < 10 ? 0 : 1));
+          return { ...d, x, y, opacity: x < 10 ? 0 : 1 };
+        });
 
       const endingGroups = educationIds.map((endId) =>
         people.filter(
@@ -231,7 +212,7 @@ function AnimatedSankey() {
         )
       );
 
-      const endingPercentages: EndingData[] = d3.merge(
+      const newEndingPercentages: EndingData[] = d3.merge(
         endingGroups.map((peopleWithSameEnding, endingId) =>
           d3.merge(
             sexIds.map((sexId) =>
@@ -262,49 +243,14 @@ function AnimatedSankey() {
         )
       );
 
-      d3.select(endingBarGroupRef.current)
-        .selectAll<SVGRectElement, EndingData>(".ending-bar")
-        .data(endingPercentages)
-        .join("rect")
-        .attr("class", "ending-bar")
-        .attr(
-          "x",
-          (d) =>
-            -dimensions.endsBarWidth * (d.sexId + 1) -
-            d.sexId * dimensions.endingBarPadding
-        )
-        .attr("width", dimensions.endsBarWidth)
-        .attr(
-          "y",
-          (d) =>
-            endYScale(d.endingId) -
-            dimensions.pathHeight / 2 +
-            dimensions.pathHeight * d.percentAbove
-        )
-        .attr("height", (d) =>
-          d.countInBar ? dimensions.pathHeight * d.percent : dimensions.pathHeight
-        )
-        .attr("fill", (d) => (d.countInBar ? colorScale(d.sesId) : "#dadadd"));
+      setVisiblePeople(visible);
+      setEndingPercentages(newEndingPercentages);
 
-      d3.select(endingValuesGroupRef.current)
-        .selectAll<SVGTextElement, EndingData>(".ending-value")
-        .data(endingPercentages)
-        .join("text")
-        .attr("class", "ending-value")
-        .attr("x", (d) => d.sesId * 33 + 47)
-        .attr(
-          "y",
-          (d) =>
-            endYScale(d.endingId) -
-            dimensions.pathHeight / 2 +
-            14 * d.sexId +
-            35
-        )
-        .attr("fill", (d) => (d.countInBar ? colorScale(d.sesId) : "#dadadd"))
-        .text((d) => d.count);
-    });
+      animFrameId = requestAnimationFrame(tick);
+    }
 
-    return () => timer.stop();
+    animFrameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animFrameId);
   }, [stackedProbabilities]);
 
   //* Step 3. Draw canvas (via Chart component)
@@ -318,127 +264,174 @@ function AnimatedSankey() {
         of where high school sophomores are ten years later
       </p>
       <Chart dimensions={dimensions}>
-      {/* Step 5. Draw data - links */}
-      <g>
-        {linkOptions.map((d, i) => (
-          <path
-            key={i}
-            className={styles.categoryPath}
-            d={linkLineGenerator(d) ?? undefined}
-            strokeWidth={dimensions.pathHeight}
-          />
-        ))}
-      </g>
-
-      {/* Step 6. Draw peripherals - starting labels */}
-      <g style={{ transform: "translateX(-20px)" }}>
-        {sesIds.map((sesId) => (
-          <React.Fragment key={sesId}>
-            <text
-              className={`${styles.label} ${styles.startLabel}`}
-              y={startYScale(sesId)}
-            >
-              {sentenceCase(sesNames[sesId])}
-            </text>
-            <rect
-              x={20}
-              y={startYScale(sesId) - dimensions.pathHeight / 2}
-              width={dimensions.endsBarWidth}
-              height={dimensions.pathHeight}
-              fill={colorScale(sesId)}
+        {/* Step 5. Draw data - links */}
+        <g>
+          {linkOptions.map((d, i) => (
+            <path
+              key={i}
+              className={styles.categoryPath}
+              d={linkLineGenerator(d) ?? undefined}
+              strokeWidth={dimensions.pathHeight}
             />
-          </React.Fragment>
-        ))}
-        <text
-          className={styles.startTitle}
-          y={startYScale(sesIds[sesIds.length - 1]) - 65}
-        >
-          Socioeconomic
-        </text>
-        <text
-          className={styles.startTitle}
-          y={startYScale(sesIds[sesIds.length - 1]) - 50}
-        >
-          Status
-        </text>
-      </g>
+          ))}
+        </g>
 
-      {/* Ending labels (static React-rendered, dynamic values D3-managed) */}
-      <g style={{ transform: `translateX(${dimensions.boundedWidth + 20}px)` }}>
-        {educationNames.map((name, i) => (
+        {/* Step 6. Draw peripherals - starting labels */}
+        <g style={{ transform: "translateX(-20px)" }}>
+          {sesIds.map((sesId) => (
+            <React.Fragment key={sesId}>
+              <text
+                className={`${styles.label} ${styles.startLabel}`}
+                y={startYScale(sesId)}
+              >
+                {sentenceCase(sesNames[sesId])}
+              </text>
+              <rect
+                x={20}
+                y={startYScale(sesId) - dimensions.pathHeight / 2}
+                width={dimensions.endsBarWidth}
+                height={dimensions.pathHeight}
+                fill={colorScale(sesId)}
+              />
+            </React.Fragment>
+          ))}
           <text
-            key={name}
-            className={`${styles.label}`}
-            y={endYScale(i) - 15}
+            className={styles.startTitle}
+            y={startYScale(sesIds[sesIds.length - 1]) - 65}
           >
-            {name}
+            Socioeconomic
           </text>
-        ))}
-        {educationIds.map((id) => (
-          <React.Fragment key={id}>
-            <path
-              className={styles.endingMarker}
-              d={d3.symbol().type(d3.symbolTriangle)() ?? undefined}
-              transform={`translate(5, ${endYScale(id) + 20})`}
-            />
-            <path
-              className={styles.endingMarker}
-              d={d3.symbol().type(d3.symbolCircle)() ?? undefined}
-              transform={`translate(5, ${endYScale(id) + 5})`}
-            />
-          </React.Fragment>
-        ))}
-        {/* D3-managed ending value counts */}
-        <g ref={endingValuesGroupRef} />
-      </g>
-
-      {/* Legend */}
-      <g className={styles.legend} transform={`translate(${dimensions.boundedWidth}, 5)`}>
-        <g transform={`translate(${-dimensions.endsBarWidth / 2 - 4}, 0)`}>
-          <path
-            d={d3.symbol().type(d3.symbolCircle)() ?? undefined}
-            transform="translate(5, 0)"
-          />
-          <text x={15}>Female</text>
-          <line
-            className={styles.legendLine}
-            x1={dimensions.endsBarWidth / 2 - 3}
-            x2={dimensions.endsBarWidth / 2 - 3}
-            y1={12}
-            y2={37}
-          />
-        </g>
-        <g
-          transform={`translate(${
-            -dimensions.endsBarWidth * 1.5 + dimensions.endingBarPadding + 1
-          }, 0)`}
-        >
-          <path
-            d={d3.symbol().type(d3.symbolTriangle)() ?? undefined}
-            transform="translate(-7, 0)"
-          />
-          <text className={styles.legendTextLeft} x={-20}>
-            Male
+          <text
+            className={styles.startTitle}
+            y={startYScale(sesIds[sesIds.length - 1]) - 50}
+          >
+            Status
           </text>
-          <line
-            className={styles.legendLine}
-            x1={-dimensions.endsBarWidth / 2 + 1}
-            x2={-dimensions.endsBarWidth / 2 + 1}
-            y1={12}
-            y2={37}
-          />
         </g>
-      </g>
 
-      {/* D3-managed animated markers */}
-      <g ref={markersGroupRef} />
+        {/* Ending labels and dynamic value counts */}
+        <g style={{ transform: `translateX(${dimensions.boundedWidth + 20}px)` }}>
+          {educationNames.map((name, i) => (
+            <text
+              key={name}
+              className={`${styles.label}`}
+              y={endYScale(i) - 15}
+            >
+              {name}
+            </text>
+          ))}
+          {educationIds.map((id) => (
+            <React.Fragment key={id}>
+              <path
+                className={styles.endingMarker}
+                d={triangleSymbolPath}
+                transform={`translate(5, ${endYScale(id) + 20})`}
+              />
+              <path
+                className={styles.endingMarker}
+                d={circleSymbolPath}
+                transform={`translate(5, ${endYScale(id) + 5})`}
+              />
+            </React.Fragment>
+          ))}
+          {endingPercentages.map((d) => (
+            <text
+              key={`${d.endingId}-${d.sexId}-${d.sesId}`}
+              className={styles.endingValue}
+              x={d.sesId * 33 + 47}
+              y={
+                endYScale(d.endingId) -
+                dimensions.pathHeight / 2 +
+                14 * d.sexId +
+                35
+              }
+              fill={d.countInBar ? colorScale(d.sesId) : "#dadadd"}
+            >
+              {d.count}
+            </text>
+          ))}
+        </g>
 
-      {/* D3-managed ending bars */}
-      <g
-        ref={endingBarGroupRef}
-        transform={`translate(${dimensions.boundedWidth}, 0)`}
-      />
-    </Chart>
+        {/* Legend */}
+        <g className={styles.legend} transform={`translate(${dimensions.boundedWidth}, 5)`}>
+          <g transform={`translate(${-dimensions.endsBarWidth / 2 - 4}, 0)`}>
+            <path
+              d={circleSymbolPath}
+              transform="translate(5, 0)"
+            />
+            <text x={15}>Female</text>
+            <line
+              className={styles.legendLine}
+              x1={dimensions.endsBarWidth / 2 - 3}
+              x2={dimensions.endsBarWidth / 2 - 3}
+              y1={12}
+              y2={37}
+            />
+          </g>
+          <g
+            transform={`translate(${
+              -dimensions.endsBarWidth * 1.5 + dimensions.endingBarPadding + 1
+            }, 0)`}
+          >
+            <path
+              d={triangleSymbolPath}
+              transform="translate(-7, 0)"
+            />
+            <text className={styles.legendTextLeft} x={-20}>
+              Male
+            </text>
+            <line
+              className={styles.legendLine}
+              x1={-dimensions.endsBarWidth / 2 + 1}
+              x2={-dimensions.endsBarWidth / 2 + 1}
+              y1={12}
+              y2={37}
+            />
+          </g>
+        </g>
+
+        {/* Animated markers */}
+        <g>
+          {visiblePeople.map((person) => (
+            <path
+              key={person.id}
+              className={styles.marker}
+              d={sexAccessor(person) === 0 ? circleSymbolPath : triangleSymbolPath}
+              style={{
+                transform: `translate(${person.x}px, ${person.y}px)`,
+                opacity: person.opacity,
+              }}
+              fill={colorScale(sesAccessor(person))}
+            />
+          ))}
+        </g>
+
+        {/* Ending bars */}
+        <g transform={`translate(${dimensions.boundedWidth}, 0)`}>
+          {endingPercentages.map((d) => (
+            <rect
+              key={`${d.endingId}-${d.sexId}-${d.sesId}`}
+              className={styles.endingBar}
+              x={
+                -dimensions.endsBarWidth * (d.sexId + 1) -
+                d.sexId * dimensions.endingBarPadding
+              }
+              width={dimensions.endsBarWidth}
+              y={
+                endYScale(d.endingId) -
+                dimensions.pathHeight / 2 +
+                dimensions.pathHeight * d.percentAbove
+              }
+              height={
+                d.countInBar
+                  ? dimensions.pathHeight * d.percent
+                  : dimensions.pathHeight
+              }
+              fill={d.countInBar ? colorScale(d.sesId) : "#dadadd"}
+            />
+          ))}
+        </g>
+      </Chart>
       <p className={styles.source}>
         Data from{" "}
         <a href="https://nces.ed.gov/programs/digest/d14/tables/dt14_104.91.asp">

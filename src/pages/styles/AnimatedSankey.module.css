@@ -81,16 +81,16 @@
   stroke-width: 1px;
 }
 
-/* Global styles for D3-managed elements */
-:global(.marker) {
+.marker {
   mix-blend-mode: multiply;
+  transition: opacity 100ms;
 }
 
-:global(.ending-bar) {
+.endingBar {
   transition: all 0.3s ease-out;
 }
 
-:global(.ending-value) {
+.endingValue {
   font-size: 0.7em;
   text-anchor: end;
   font-weight: 600;
