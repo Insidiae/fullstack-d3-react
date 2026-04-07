@@ -1,14 +1,16 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../../components/Chart";
 
-import type { BoundedDimensions } from "../../utils/types";
-
 import type {
+  weatherDataLoader,
   WeatherData,
   NumericWeatherDataMetric,
-} from "../../hooks/useWeatherData";
+} from "../../loaders";
+import type { BoundedDimensions } from "../../utils/types";
+
 
 import styles from "./styles/CommonHeatmap.module.css";
 
@@ -23,7 +25,9 @@ const metrics: NumericWeatherDataMetric[] = [
   "temperatureMax",
 ];
 
-function CommonHeatmap({ dataset }: { dataset: WeatherData[] }) {
+function CommonHeatmap() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
+  
   //* Step 1b. Access Data
   const parseDate = d3.timeParse("%Y-%m-%d");
   const dateAccessor = (d: WeatherData) => parseDate(d.date) as Date;

@@ -1,7 +1,8 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
-import type { WeatherData } from "../hooks/useWeatherData";
+import type { weatherDataLoader, WeatherData } from "../loaders";
 
 import styles from "./styles/DashboardDesign.module.css";
 
@@ -16,7 +17,8 @@ const dateFormat = (d: string) =>
 const format24HourTime = (d: number) =>
   +d3.timeFormat("%H")(new Date(d * 1000));
 
-function DashboardDesign({ dataset }: { dataset: WeatherData[] }) {
+function DashboardDesign() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
   const sortedDataset = React.useMemo(
     () =>
       dataset.sort(

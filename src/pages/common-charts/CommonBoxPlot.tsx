@@ -1,13 +1,15 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../../components/Chart";
 import Axis from "../../components/Axis";
 
 import type {
+  weatherDataLoader,
   WeatherData,
   NumericWeatherDataMetric,
-} from "../../hooks/useWeatherData";
+} from "../../loaders";
 import type { BoundedDimensions } from "../../utils/types";
 
 import styles from "./styles/CommonBoxPlot.module.css";
@@ -213,7 +215,9 @@ function BoxPlot({
   );
 }
 
-function CommonBoxPlot({ dataset }: { dataset: WeatherData[] }) {
+function CommonBoxPlot() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
+  
   return (
     <div className={styles.wrapper}>
       <BoxPlot

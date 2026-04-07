@@ -1,12 +1,13 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../components/Chart";
 import Axis from "../components/Axis";
 
+import type { weatherDataLoader, WeatherData } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
 
-import type { WeatherData } from "../hooks/useWeatherData";
 
 import styles from "./styles/MarginalHistogram.module.css";
 
@@ -161,7 +162,9 @@ function legendReducer(state: LegendState, action: LegendAction) {
   }
 }
 
-function MarginalHistogram({ dataset }: { dataset: WeatherData[] }) {
+function MarginalHistogram() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
+  
   //* Step 4. Create scales
   //? We'll want to have equal domains for both axes
   const temperaturesExtent = d3.extent([

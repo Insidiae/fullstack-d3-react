@@ -14,7 +14,7 @@
   transition: fill 250ms;
 }
 
-.bin:hover rect {
+.bin:hover rect, .bin:focus rect {
   fill: hsl(276deg 98% 67%);
 }
 

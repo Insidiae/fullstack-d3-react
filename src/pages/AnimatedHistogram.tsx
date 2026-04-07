@@ -1,11 +1,12 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 import { animated, Transition, Spring } from "@react-spring/web";
 
 import Chart from "../components/Chart";
 import Axis from "../components/Axis";
 
-import type { WeatherData } from "../hooks/useWeatherData";
+import type { weatherDataLoader, WeatherData } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
 
 import styles from "./styles/AnimatedHistogram.module.css";
@@ -51,7 +52,8 @@ const metrics: NumberDataMetric[] = [
   "temperatureMax",
 ];
 
-function AnimatedHistogram({ dataset }: { dataset: WeatherData[] }) {
+function AnimatedHistogram() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
   const [selectedMetricIndex, setSelectedMetricIndex] = React.useState(0);
 
   const metric = metrics[selectedMetricIndex];
@@ -121,7 +123,7 @@ function AnimatedHistogram({ dataset }: { dataset: WeatherData[] }) {
           >
             <Transition
               items={bins}
-              from={(bin) => ({
+              from={(bin: d3.Bin<WeatherData, number>) => ({
                 barY: dimensions.boundedHeight,
                 barWidth: Math.max(0, widthAccessorScaled(bin)),
                 barHeight: 0,
@@ -129,7 +131,7 @@ function AnimatedHistogram({ dataset }: { dataset: WeatherData[] }) {
                 textOpacity: 0,
                 fill: "#63fd58",
               })}
-              enter={(bin) => [
+              enter={(bin: d3.Bin<WeatherData, number>) => [
                 {
                   barY: dimensions.boundedHeight,
                   barWidth: Math.max(0, widthAccessorScaled(bin)),

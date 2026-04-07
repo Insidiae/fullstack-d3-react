@@ -1,13 +1,14 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 import { useTransition, animated, config } from "@react-spring/web";
 
 import Chart from "../components/Chart";
 import Axis from "../components/Axis";
 
+import type { weatherDataLoader, WeatherData } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
 
-import type { WeatherData } from "../hooks/useWeatherData";
 
 import styles from "./styles/ScatterplotInteractions.module.css";
 
@@ -73,7 +74,8 @@ function tooltipReducer(state: TooltipState, action: TooltipAction) {
   }
 }
 
-function ScatterPlotInteractions({ dataset }: { dataset: WeatherData[] }) {
+function ScatterPlotInteractions() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
   //* Step 4. Create scales
   const xScale = d3
     .scaleTime()

@@ -1,13 +1,13 @@
 import * as React from "react";
 import * as d3 from "d3";
+import { useLoaderData } from "react-router";
 
 import Chart from "../components/Chart";
 import Line from "../components/Line";
 import Axis from "../components/Axis";
 
+import type { weatherDataLoader, WeatherData } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
-
-import type { WeatherData } from "../hooks/useWeatherData";
 
 //* Step 1b. Access Data
 const dateParser = d3.timeParse("%Y-%m-%d");
@@ -35,7 +35,8 @@ dimensions.boundedHeight =
 
 const formatTimelineDate = d3.timeFormat("%B");
 
-function LineChart({ dataset }: { dataset: WeatherData[] }) {
+function LineChart() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
   //* Step 4. Create scales
   const xScale = d3
     .scaleTime()

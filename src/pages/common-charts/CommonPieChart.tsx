@@ -1,11 +1,12 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../../components/Chart";
 
 import { iconPaths } from "../../utils/iconPaths";
 
-import type { WeatherData } from "../../hooks/useWeatherData";
+import type { weatherDataLoader, WeatherData } from "../../loaders";
 import type { BoundedDimensions } from "../../utils/types";
 
 import styles from "./styles/CommonPieChart.module.css";
@@ -127,7 +128,9 @@ function PieChart({
   );
 }
 
-function CommonPieChart({ dataset }: { dataset: WeatherData[] }) {
+function CommonPieChart() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
+
   return (
     <div className={styles.wrapper}>
       <PieChart dataset={dataset} metric="icon" />

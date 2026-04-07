@@ -1,15 +1,17 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../../components/Chart";
 import Axis from "../../components/Axis";
 
-import type { BoundedDimensions } from "../../utils/types";
-
 import type {
+  weatherDataLoader,
   WeatherData,
   NumericWeatherDataMetric,
-} from "../../hooks/useWeatherData";
+} from "../../loaders";
+import type { BoundedDimensions } from "../../utils/types";
+
 
 import styles from "./styles/CommonStyles.module.css";
 
@@ -105,7 +107,9 @@ function Scatterplot({
   );
 }
 
-function CommonScatterplot({ dataset }: { dataset: WeatherData[] }) {
+function CommonScatterplot() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
+  
   return (
     <div className={styles.wrapper}>
       <Scatterplot

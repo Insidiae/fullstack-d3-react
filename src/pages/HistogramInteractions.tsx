@@ -1,10 +1,11 @@
 import * as React from "react";
+import { useLoaderData } from "react-router";
 import * as d3 from "d3";
 
 import Chart from "../components/Chart";
 import Axis from "../components/Axis";
 
-import type { WeatherData } from "../hooks/useWeatherData";
+import type { weatherDataLoader, WeatherData } from "../loaders";
 import type { BoundedDimensions } from "../utils/types";
 
 import styles from "./styles/HistogramInteractions.module.css";
@@ -60,7 +61,8 @@ function tooltipReducer(state: TooltipState, action: TooltipAction) {
   }
 }
 
-function HistogramInteractions({ dataset }: { dataset: WeatherData[] }) {
+function HistogramInteractions() {
+  const dataset = useLoaderData<typeof weatherDataLoader>();
   //* Step 1b. Access Data
   const xAccessor = (d: WeatherData) => d.humidity;
 
