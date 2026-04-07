@@ -67,6 +67,16 @@ export type CountryData = {
   [key: string]: number;
 };
 
+export interface EducationData {
+  sex: string;
+  ses: string;
+  [key: string]: string | number;
+}
+
+export const educationDataLoader = async () => {
+  return d3.json("/data/education.json") as Promise<Array<EducationData>>;
+};
+
 export const worldDataLoader = async () => {
   const countryShapesRequest = d3.json(
     "/data/world-geojson.json"

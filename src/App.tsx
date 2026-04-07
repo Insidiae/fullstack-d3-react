@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
-import { weatherDataLoader, worldDataLoader } from "./loaders";
+import { weatherDataLoader, worldDataLoader, educationDataLoader } from "./loaders";
 
 import MainPage from "./pages/MainPage";
 
@@ -32,6 +32,7 @@ import DashboardDesign from "./pages/DashboardDesign";
 
 import MarginalHistogram from "./pages/MarginalHistogram";
 import RadarWeatherChart from "./pages/RadarWeatherChart";
+import AnimatedSankey from "./pages/AnimatedSankey";
 
 const router = createBrowserRouter([
   {
@@ -156,6 +157,11 @@ const router = createBrowserRouter([
         path: "radar-weather-chart",
         loader: weatherDataLoader,
         element: <RadarWeatherChart />,
+      },
+      {
+        path: "animated-sankey",
+        loader: educationDataLoader,
+        element: <AnimatedSankey />,
       },
     ],
   },

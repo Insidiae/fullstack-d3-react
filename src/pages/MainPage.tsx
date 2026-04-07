@@ -174,7 +174,11 @@ function MainPage() {
               Radar Weather Chart
             </Link>
           </li>
-          <li>Animated Sankey Diagram (COMING SOON&trade;)</li>
+          <li>
+            <Link className={styles.appLink} to="chapters/animated-sankey">
+              Animated Sankey Diagram
+            </Link>
+          </li>
         </ol>
       </header>
     </div>
